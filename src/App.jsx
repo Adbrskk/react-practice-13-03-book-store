@@ -1,7 +1,7 @@
 import store from "./redux/store";
 
 function App() {
-  console.log("Начало:", store.getState());
+  console.log("Начальное состояние:", store.getState());
 
   store.dispatch({
     type: "BOOK_ADD",
@@ -44,7 +44,7 @@ function App() {
     },
   });
 
-  console.log("После обновления года:", store.getState());
+  console.log("После обновления года у 1984:", store.getState());
 
   store.dispatch({
     type: "BOOK_TOGGLE_AVAILABILITY",
