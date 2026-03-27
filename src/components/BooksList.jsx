@@ -1,22 +1,17 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useMemo } from "react";
+import { useState } from "react";
 
 function BooksList() {
   const books = useSelector((state) => state.books);
   const readers = useSelector((state) => state.readers);
   const dispatch = useDispatch();
 
-  const availableBooks = useMemo(
-    () => books.filter((book) => book.isAvailable),
-    [books]
-  );
+  const [selectedReader, setSelectedReader] = useState({});
 
-  const borrowedBooks = useMemo(
-    () => books.filter((book) => !book.isAvailable),
-    [books]
-  );
+  const handleLend = (bookId) => {
+    const readerId = selectedReader[bookId];
+    if (!readerId) return;
 
-  const handleLend = (bookId, readerId) => {
     dispatch({
       type: "BOOK_LEND_TO_READER",
       payload: { bookId, readerId },
@@ -30,47 +25,61 @@ function BooksList() {
     });
   };
 
+  const availableBooks = books.filter((book) => book.isAvailable);
+  const borrowedBooks = books.filter((book) => !book.isAvailable);
+
   return (
     <div>
       <h2>Книги</h2>
 
       <h3>Доступные книги</h3>
-      <ul>
-        {availableBooks.map((book) => (
-          <li key={book.id}>
-            <strong>{book.title}</strong> — {book.author} ({book.year})
-            <div>
+      {availableBooks.map((book) => (
+        <div key={book.id} className="list-card">
+          <strong>
+            {book.title} — {book.author} ({book.year})
+          </strong>
+
+          <div style={{ marginTop: "8px" }}>
+            <select
+              onChange={(e) =>
+                setSelectedReader({
+                  ...selectedReader,
+                  [book.id]: Number(e.target.value),
+                })
+              }
+            >
+              <option value="">Выберите читателя</option>
               {readers.map((reader) => (
-                <button
-                  key={reader.id}
-                  onClick={() => handleLend(book.id, reader.id)}
-                >
-                  Выдать: {reader.name}
-                </button>
+                <option key={reader.id} value={reader.id}>
+                  {reader.name}
+                </option>
               ))}
-            </div>
-          </li>
-        ))}
-      </ul>
+            </select>
+
+            <button onClick={() => handleLend(book.id)}>
+              Выдать
+            </button>
+          </div>
+        </div>
+      ))}
 
       <h3>Выданные книги</h3>
-      <ul>
-        {borrowedBooks.map((book) => (
-          <li key={book.id}>
-            <strong>{book.title}</strong>
-            {readers.map((reader) =>
-              reader.borrowedBooks.includes(book.id) ? (
-                <button
-                  key={reader.id}
-                  onClick={() => handleReturn(book.id, reader.id)}
-                >
-                  Вернуть от {reader.name}
-                </button>
-              ) : null
-            )}
-          </li>
-        ))}
-      </ul>
+      {borrowedBooks.map((book) => (
+        <div key={book.id} className="list-card">
+          <strong>{book.title}</strong>
+
+          {readers.map((reader) =>
+            reader.borrowedBooks.includes(book.id) ? (
+              <button
+                key={reader.id}
+                onClick={() => handleReturn(book.id, reader.id)}
+              >
+                Вернуть от {reader.name}
+              </button>
+            ) : null
+          )}
+        </div>
+      ))}
     </div>
   );
 }
