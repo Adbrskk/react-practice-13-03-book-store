@@ -8,20 +8,26 @@ function ReadersList() {
     <div>
       <h2>Читатели</h2>
 
-      {readers.map((reader) => (
-        <div key={reader.id} className="item">
-          <h3>{reader.name}</h3>
-          <p>{reader.email}</p>
-
-          <p><strong>Книги:</strong></p>
-          <ul>
-            {reader.borrowedBooks.map((bookId) => {
-              const book = books.find((b) => b.id === bookId);
-              return <li key={bookId}>{book?.title}</li>;
-            })}
-          </ul>
-        </div>
-      ))}
+      <ul>
+        {readers.map((reader) => (
+          <li key={reader.id}>
+            <strong>{reader.name}</strong> — {reader.email}
+            <div>
+              Книги:
+              <ul>
+                {reader.borrowedBooks.length === 0 ? (
+                  <li>Нет книг</li>
+                ) : (
+                  reader.borrowedBooks.map((bookId) => {
+                    const book = books.find((b) => b.id === bookId);
+                    return <li key={bookId}>{book?.title}</li>;
+                  })
+                )}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

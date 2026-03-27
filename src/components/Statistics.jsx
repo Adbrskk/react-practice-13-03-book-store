@@ -1,35 +1,34 @@
 import { useSelector } from "react-redux";
 
 function Statistics() {
-  const statistics = useSelector((state) => state.statistics);
+  const stats = useSelector((state) => state.statistics);
 
   return (
     <div>
       <h2>Статистика</h2>
-      <p>Всего книг: {statistics.totalBooks}</p>
-      <p>Доступно книг: {statistics.availableBooks}</p>
-      <p>Выдано книг: {statistics.borrowedBooks}</p>
-      <p>Активных читателей: {statistics.activeReadersCount}</p>
 
-      <p>
-        Самый популярный автор:{" "}
-        {statistics.mostPopularAuthor.name || "Нет данных"} (
-        {statistics.mostPopularAuthor.booksCount})
-      </p>
-
-      <h3>Книги по десятилетиям</h3>
       <ul>
-        {Object.entries(statistics.booksByDecade).map(([decade, count]) => (
+        <li>Всего книг: {stats.totalBooks}</li>
+        <li>Доступно: {stats.availableBooks}</li>
+        <li>Выдано: {stats.borrowedBooks}</li>
+        <li>Активные читатели: {stats.activeReadersCount}</li>
+        <li>
+          Популярный автор: {stats.mostPopularAuthor.name} (
+          {stats.mostPopularAuthor.booksCount})
+        </li>
+        <li>
+          Проверка: {stats.consistencyCheck ? "OK" : "Ошибка"}
+        </li>
+      </ul>
+
+      <h3>По десятилетиям</h3>
+      <ul>
+        {Object.entries(stats.booksByDecade).map(([decade, count]) => (
           <li key={decade}>
-            {decade}-е: {count}
+            {decade}s — {count} книг
           </li>
         ))}
       </ul>
-
-      <p>
-        Проверка консистентности:{" "}
-        {statistics.consistencyCheck ? "OK" : "Ошибка"}
-      </p>
     </div>
   );
 }
