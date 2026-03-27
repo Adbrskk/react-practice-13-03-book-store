@@ -3,7 +3,7 @@ import store from "./redux/store";
 function App() {
   console.log("Начальное состояние:", store.getState());
 
-  // Добавляем книги
+
   store.dispatch({
     type: "BOOK_ADD",
     payload: {
@@ -24,7 +24,7 @@ function App() {
 
   console.log("После добавления книг:", store.getState());
 
-  // Добавляем читателей
+
   store.dispatch({
     type: "READER_ADD",
     payload: {
