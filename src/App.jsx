@@ -1,62 +1,75 @@
-import store from "./redux/store";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import AddBookForm from "./components/AddBookForm";
+import AddReaderForm from "./components/AddReaderForm";
+import BooksList from "./components/BooksList";
+import ReadersList from "./components/ReadersList";
+import Statistics from "./components/Statistics";
+import "./App.css";
 
 function App() {
-  console.log("Начальное состояние:", store.getState());
+  const dispatch = useDispatch();
 
-  store.dispatch({
-    type: "BOOK_ADD",
-    payload: {
-      title: "Гарри Поттер",
-      author: "Дж. Ролинг",
-      year: 1967,
-    },
-  });
+  useEffect(() => {
+    // Добавляем книги
+    const books = [
+      { title: "1984", author: "George Orwell", year: 1949 },
+      { title: "Animal Farm", author: "George Orwell", year: 1945 },
+      { title: "Dune", author: "Frank Herbert", year: 1965 },
+      { title: "Foundation", author: "Isaac Asimov", year: 1951 },
+      { title: "It", author: "Stephen King", year: 1986 },
+      { title: "The Shining", author: "Stephen King", year: 1977 },
+      { title: "Harry Potter", author: "J.K. Rowling", year: 1997 },
+      { title: "The Hobbit", author: "J.R.R. Tolkien", year: 1937 },
+      { title: "Lord of the Rings", author: "J.R.R. Tolkien", year: 1954 },
+    ];
 
-  console.log("После добавления Гарри Поттера:", store.getState());
+    books.forEach((book) => {
+      dispatch({ type: "BOOK_ADD", payload: book });
+    });
 
-  store.dispatch({
-    type: "BOOK_ADD",
-    payload: {
-      title: "1984",
-      author: "Оруэлл",
-      year: 1949,
-    },
-  });
+    // Добавляем читателей
+    const readers = [
+      { name: "Иван Петров", email: "ivan@mail.com" },
+      { name: "Анна Смирнова", email: "anna@mail.com" },
+      { name: "Петр Иванов", email: "petr@mail.com" },
+      { name: "Мария Сидорова", email: "maria@mail.com" },
+      { name: "Алексей Кузнецов", email: "alex@mail.com" },
+    ];
 
-  console.log("После добавления 1984:", store.getState());
-
-  const firstBookId = store.getState().books[0].id;
-
-  store.dispatch({
-    type: "BOOK_REMOVE",
-    payload: firstBookId,
-  });
-
-  console.log("После удаления первой книги:", store.getState());
-
-  const secondBook = store.getState().books[0];
-
-  store.dispatch({
-    type: "BOOK_UPDATE_INFO",
-    payload: {
-      id: secondBook.id,
-      year: 1948,
-    },
-  });
-
-  console.log("После обновления года у 1984:", store.getState());
-
-  store.dispatch({
-    type: "BOOK_TOGGLE_AVAILABILITY",
-    payload: secondBook.id,
-  });
-
-  console.log("После переключения доступности:", store.getState());
+    readers.forEach((reader) => {
+      dispatch({ type: "READER_ADD", payload: reader });
+    });
+  }, [dispatch]);
 
   return (
-    <div>
-      <h1>Book Catalog</h1>
-      <p>Открой консоль браузера</p>
+    <div className="container">
+      <h1 className="title">Book Store</h1>
+
+      <div className="forms">
+        <div className="card">
+          <AddBookForm />
+        </div>
+
+        <div className="card">
+          <AddReaderForm />
+        </div>
+      </div>
+
+      <div className="lists">
+        <div className="card">
+          <BooksList />
+        </div>
+
+        <div className="card">
+          <ReadersList />
+        </div>
+      </div>
+
+      <div className="card" style={{ marginTop: "24px" }}>
+        <Statistics />
+      </div>
     </div>
   );
 }
