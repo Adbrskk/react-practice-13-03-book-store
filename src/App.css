@@ -72,3 +72,11 @@ button:hover {
 .status {
   font-weight: bold;
 }
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 6px;
+}
